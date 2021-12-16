@@ -141,7 +141,11 @@ router.post('/filter', function(req, res) {
                     books = books.filter(book => (book.priceBook >= req.body.price1 && book.priceBook <= req.body.price2));
                 }
                 if (req.body.nameBook != null) {
-                    books = books.filter(book => (book.nameBook.toLowerCase().indexOf(req.body.nameBook) != -1));
+                    books = books.filter(book => (book.nameBook.toLowerCase().normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/đ/g, 'd').replace(/Đ/g, 'D').indexOf(req.body.nameBook.toLowerCase().normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/đ/g, 'd').replace(/Đ/g, 'D')) != -1));
                     console.log(books)
                 }
                 if (req.body.sortByPrice == "sortAscending") {

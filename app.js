@@ -59,7 +59,8 @@ app.use(bodyParser.json({ limit: '10mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/BookShopPro');
+// mongoose.connect('mongodb://localhost:27017/BookShopPro');
+mongoose.connect('mongodb+srv://bookStore:bookstore@cluster0.zas9w.mongodb.net/BookShop203');
 
 
 var passport = require('passport');
