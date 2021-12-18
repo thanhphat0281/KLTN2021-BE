@@ -34,6 +34,7 @@ const segment = require('./routes/D_action/segmentController');
 //E_payment
 const order = require('./routes/E_payment/orderController');
 const orderDetail = require('./routes/E_payment/orderDetailController');
+const paymentMomo = require('./routes/E_payment/paymentMomo');
 const sendmail = require('./routes/E_payment/sendmail');
 //F_event
 const discountCode = require('./routes/F_event/discountCodeController');
@@ -44,7 +45,7 @@ const dataset = require('./routes/G_statistic/datasetControleer');
 //H_recommend
 const dataset_recommend = require('./routes/H_recommend/dataset_Recommend')
 const datasetRecommend = require('./routes/H_recommend/all_RecommendSys')
-    //I_best
+//I_best
 const best_selling = require('./routes/I_best/best_Selling');
 //end controller
 // view engine setup
@@ -84,10 +85,10 @@ app.use(passport.session());
 //app
 // using the custom middleware for storing variable in response
 app.use((req, res, next) => {
-        res.locals.isAuthenticated = req.isAuthenticated()
-        next()
-    })
-    //ALLOW PATHS WITHOUT TOKEN AUTHENTICATION
+    res.locals.isAuthenticated = req.isAuthenticated()
+    next()
+})
+//ALLOW PATHS WITHOUT TOKEN AUTHENTICATION
 app.use(expressJWT({ secret: superSecret })
     .unless({
         path: [
@@ -102,6 +103,10 @@ app.use(expressJWT({ secret: superSecret })
             // '/socials/google',
             // '/socials/facebook',
             '/addAccount',
+            {
+                url: /^\/paymentMomo.*/,
+                methods: ['GET', 'POST']
+            },
             {
                 url: /^\/segments.*/,
                 methods: ['GET']
@@ -158,6 +163,7 @@ app.use('/points', point);
 app.use('/segments', segment);
 //E_payment
 app.use('/orders', order);
+app.use('/paymentMomo', paymentMomo);
 app.use('/orderDetails', orderDetail);
 app.use('/send', sendmail);
 //F_event
@@ -169,16 +175,16 @@ app.use('/data', dataset);
 //H_recommend
 app.use('/dataset_recommend', dataset_recommend)
 app.use('/datasetRecommend', datasetRecommend)
-    //I_best
+//I_best
 
 app.use('/best_selling', best_selling)
-    // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
