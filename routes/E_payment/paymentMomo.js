@@ -8,6 +8,7 @@ const modelOrder = require('../../models/E_payment/order');
 const modelOrderDetail = require('../../models/E_payment/orderDetail');
 const modelBook = require('../../models/A_store/book');
 const nodemailer = require('nodemailer');
+const modelCartBook = require('../../models/D_action/cartBook');
 
 const partnerCode = "MOMOIYF420211121";
 const accessKey = "hU9agyEwyvIf2AjK";
@@ -72,6 +73,7 @@ router.get('/notifyPaymentMoMo', function (req, res) {
             saveOrder(extraData.order, resultQuery.orderId)
             saveOrderDetail(extraData.orderDetails, resultQuery.orderId)
             sendMail(extraData.order, extraData.sendMail)
+            deleteCartBook(extraData.order.customerID)
             res.redirect(`${returnUrl + extraData.order.customerID}?resultCode=${resultQuery.resultCode}`)
 
             //send mail 
@@ -86,12 +88,9 @@ router.get('/notifyPaymentMoMo', function (req, res) {
 });
 
 router.post('/test', async function (req, res) {
-    const id = new ObjectID().toHexString();
-    console.log(id)
-    var item = await saveOrderDetail(req.body, id)
-    // Print new id to the console
-    res.json(item)
-    console.log(id)
+    deleteCartBook(req.body.id)
+    res.json({ok:"ok"})
+    console.log("ok")
 });
 
 let encrypt = (data) => {
@@ -106,20 +105,6 @@ let encodeBase64 = (data) => {
 let decodeBase64 = (data) => {
     return Buffer.from(data, 'base64').toString('utf8')
 }
-
-router.post('/updateQuality', async (req, res) => {
-    for (let item of req.body) {
-        const book = await modelBook.findById(item.bookID)
-        const update = await modelBook.findByIdAndUpdate(book._id, {
-            $set: {
-                quantity: book.quantity + item.count,
-            }
-        }, (err, book) => {
-            if (err) res.json(err)
-        })
-    }
-    res.json(true)
-})
 
 let saveOrder = (Order, OrderId) => {
     var newOrder = new modelOrder()
@@ -338,8 +323,16 @@ let sendMail = (Order, mail) => {
     } catch (error) {
         console.log(error)
     }
-
 }
+ let deleteCartBook = (userID) => {
+    var cartBookQuery = { userID: userID };
+    modelCartBook.deleteMany(cartBookQuery, function(err, value) {
+        if (err) {
+            console.log(err);
+        } else {
+        }
+    });
+};
 
 let sendRequestMoMo = (options, requestBody) => {
     return new Promise((resolve, reject) => {
