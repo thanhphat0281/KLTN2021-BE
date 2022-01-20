@@ -6,6 +6,7 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var superSecret = 'toihocmean';
 const nodemailer = require('nodemailer');
+const env = require('../../env')
 //user
 //register
 router.post('/signup', function(req, res) {
@@ -37,7 +38,7 @@ router.post('/signup', function(req, res) {
                         });
                       
                         var output = `
-                        To confirm your account, please click here : http://localhost:4200/confirm-account/${token}
+                        To confirm your account, please click here : ${env.hostFE}/confirm-account/${token}
                         `
                         console.log(output)
                        
@@ -49,8 +50,8 @@ router.post('/signup', function(req, res) {
                     
                             // true for 465, false for other ports
                             auth: {
-                                user: 'bookstoreute@gmail.com', // generated ethereal user
-                                pass: 'mjzailslagceutte' // generated ethereal password
+                                user: env.userSendMail, // generated ethereal user
+                                pass: env.passSendMail // generated ethereal password
                             },
                             tls: {
                                 rejectUnauthorized: false
@@ -59,7 +60,7 @@ router.post('/signup', function(req, res) {
                     
                         // setup email data with unicode symbols
                         var mailOptions = {
-                            from: 'bookstoreute@gmail.com', // sender address
+                            from: env.userSendMail, // sender address
                             to: inserteduser.email, // list of receivers
                             subject: 'Confirm Your Email', // Subject line
                             text: 'Hello world?', // plain text body

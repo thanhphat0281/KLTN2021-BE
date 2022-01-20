@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const env = require('../../env')
 //Send mail Cash
 router.post('/', function(req, res) {
     console.log(req.body)
@@ -163,8 +164,8 @@ router.post('/', function(req, res) {
 
             // true for 465, false for other ports
             auth: {
-                user: 'bookstoreute@gmail.com', // generated ethereal user
-                pass: 'mjzailslagceutte' // generated ethereal password
+                user: env.userSendMail, // generated ethereal user
+                pass: env.passSendMail // generated ethereal password
             },
             tls: {
                 rejectUnauthorized: false
@@ -344,8 +345,8 @@ router.post('/PayPal', function(req, res) {
 
         // true for 465, false for other ports
         auth: {
-            user: 'bookstoreute@gmail.com', // generated ethereal user
-            pass: 'mjzailslagceutte' // generated ethereal password
+            user: env.userSendMail, // generated ethereal user
+            pass: env.passSendMail // generated ethereal password
         },
         tls: {
             rejectUnauthorized: false

@@ -51,9 +51,9 @@ const best_selling = require('./routes/I_best/best_Selling');
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
-
+const env = require('./env')
 app.use(cors({
-    origin: ['http://localhost:4200', 'http://192.168.1.16:4200'],
+    origin: ['http://localhost:4200', 'http://192.168.1.16:4200' , '*',env.hostFE],
     credentials: true
 }));
 app.use(bodyParser.json({ limit: '10mb', extended: true }));
